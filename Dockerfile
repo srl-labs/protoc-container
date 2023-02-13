@@ -1,5 +1,5 @@
-FROM golang:1.17-alpine as go-grpc-builder
-ENV PROTOC_GEN_GO_GRPC_VERSION=1.1.0 \
+FROM golang:1.18-alpine as go-grpc-builder
+ENV PROTOC_GEN_GO_GRPC_VERSION=1.2.0 \
     GOBIN=/out
 
 RUN mkdir /out
@@ -7,12 +7,13 @@ RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GR
 
 
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 RUN apt update && apt install -y curl unzip python3 python3-distutils
 
 # protobuf releases - https://github.com/protocolbuffers/protobuf/releases
-ENV PROTOBUF_VERSION=3.18.0 \
-    PROTOC_GEN_GO_VERSION=1.27.1 \
+ENV PROTOBUF_VERSION=21.12 \
+    PROTOC_GEN_GO_VERSION=1.28.1 \
+    PYTHON_GRPCIO_TOOLS_VERSION=1.51.1 \
     OUTDIR=/out
 
 RUN mkdir /protobuf && mkdir /in && mkdir /out
@@ -32,6 +33,6 @@ RUN install /protobuf/bin/protoc /protobuf/protoc-gen-go /usr/bin && rm -rf /pro
 COPY --from=go-grpc-builder /out/ /usr/bin/
 
 # install grpcio-tools for python grpc generation
-RUN curl -L -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 /tmp/get-pip.py && rm -f /tmp/get-pip.py && pip3 install grpcio-tools
+RUN curl -L -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 /tmp/get-pip.py && rm -f /tmp/get-pip.py && pip3 install grpcio-tools==${PYTHON_GRPCIO_TOOLS_VERSION}
 
 WORKDIR /in
