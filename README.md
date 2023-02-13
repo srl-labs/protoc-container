@@ -4,6 +4,20 @@ This repo contains a Dockerfile for building an image used to generate language-
 
 Protoc and gRPC plugin versions are set in the Dockerfile.
 
+## Build
+
+```bash
+IMAGE_TAG=0.0.2
+docker build -t ghcr.io/srl-labs/protoc:${IMAGE_TAG} .
+docker tag ghcr.io/srl-labs/protoc:${IMAGE_TAG} ghcr.io/srl-labs/protoc:latest
+```
+
+```bash
+# push images
+docker push ghcr.io/srl-labs/protoc:${IMAGE_TAG}
+docker push ghcr.io/srl-labs/protoc:latest
+```
+
 ## Go
 
 ```bash
