@@ -35,4 +35,13 @@ COPY --from=go-grpc-builder /out/ /usr/bin/
 # install grpcio-tools for python grpc generation
 RUN curl -L -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 /tmp/get-pip.py && rm -f /tmp/get-pip.py && pip3 install grpcio-tools==${PYTHON_GRPCIO_TOOLS_VERSION}
 
+# create ext_protos directory
+RUN mkdir -p /ext_protos/google/protobuf
+
+# download any.proto
+RUN curl -L -o /ext_protos/google/protobuf/any.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v22.0/src/google/protobuf/any.proto
+
+# download descriptor.proto
+RUN curl -L -o /ext_protos/google/protobuf/descriptor.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v22.0/src/google/protobuf/descriptor.proto
+
 WORKDIR /in
