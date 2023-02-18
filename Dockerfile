@@ -1,6 +1,6 @@
 FROM golang:1.18-alpine as go-grpc-builder
-ENV PROTOC_GEN_GO_GRPC_VERSION=1.2.0 \
-    GOBIN=/out
+ARG PROTOC_GEN_GO_GRPC_VERSION=1.2.0
+ENV GOBIN=/out
 
 RUN mkdir /out
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GRPC_VERSION}
@@ -11,10 +11,11 @@ FROM ubuntu:22.04
 RUN apt update && apt install -y curl unzip python3 python3-distutils
 
 # protobuf releases - https://github.com/protocolbuffers/protobuf/releases
-ENV PROTOBUF_VERSION=21.12 \
-    PROTOC_GEN_GO_VERSION=1.28.1 \
-    PYTHON_GRPCIO_TOOLS_VERSION=1.51.1 \
-    OUTDIR=/out
+ARG PROTOBUF_VERSION=21.12
+ARG PROTOC_GEN_GO_VERSION=1.28.1
+ARG PYTHON_GRPCIO_TOOLS_VERSION=1.51.1
+
+ENV OUTDIR=/out
 
 RUN mkdir /protobuf && mkdir /in && mkdir /out
 
