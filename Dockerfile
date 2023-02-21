@@ -40,9 +40,9 @@ RUN curl -L -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 /
 RUN mkdir -p /ext_protos/google/protobuf
 
 # download any.proto
-RUN curl -L -o /ext_protos/google/protobuf/any.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v22.0/src/google/protobuf/any.proto
+RUN curl -L -o /ext_protos/google/protobuf/any.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v${PROTOBUF_VERSION}/src/google/protobuf/any.proto
 
 # download descriptor.proto
-RUN curl -L -o /ext_protos/google/protobuf/descriptor.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v22.0/src/google/protobuf/descriptor.proto
+RUN curl -L -o /ext_protos/google/protobuf/descriptor.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v${PROTOBUF_VERSION}/src/google/protobuf/descriptor.proto
 
 WORKDIR /in
