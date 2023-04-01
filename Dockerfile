@@ -6,14 +6,15 @@ RUN mkdir /out
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GRPC_VERSION}
 
 
-
-FROM ubuntu:22.04
-RUN apt update && apt install -y curl unzip python3 python3-distutils
+FROM python:3-alpine
+RUN apk add curl unzip
 
 # protobuf releases - https://github.com/protocolbuffers/protobuf/releases
-ARG PROTOBUF_VERSION=21.12
+ARG PROTOBUF_VERSION=22.1
 ARG PROTOC_GEN_GO_VERSION=1.28.1
 ARG PYTHON_GRPCIO_TOOLS_VERSION=1.51.1
+ARG PROTOC_GEN_DOC_VERSION=1.5.1
+ARG PROTOBUF_DEV_VERSION=3.21.9-r0
 
 ENV OUTDIR=/out
 
@@ -28,21 +29,16 @@ RUN curl -NL https://github.com/protocolbuffers/protobuf-go/releases/download/v$
 # protoc-gen-go-grpc installation
 RUN curl -NL https://github.com/protocolbuffers/protobuf-go/releases/download/v${PROTOC_GEN_GO_VERSION}/protoc-gen-go.v${PROTOC_GEN_GO_VERSION}.linux.amd64.tar.gz | tar xvz -C /protobuf
 
-RUN install /protobuf/bin/protoc /protobuf/protoc-gen-go /usr/bin && rm -rf /protobuf
+RUN install /protobuf/bin/protoc /protobuf/protoc-gen-go /usr/bin
 
 # copy protoc-gen-go-grpc
 COPY --from=go-grpc-builder /out/ /usr/bin/
 
 # install grpcio-tools for python grpc generation
-RUN curl -L -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 /tmp/get-pip.py && rm -f /tmp/get-pip.py && pip3 install grpcio-tools==${PYTHON_GRPCIO_TOOLS_VERSION}
+RUN pip3 install grpcio-tools==${PYTHON_GRPCIO_TOOLS_VERSION}
 
-# create ext_protos directory
-RUN mkdir -p /ext_protos/google/protobuf
+# download protoc-gen-doc
+RUN curl -Lo -X GET https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTOC_GEN_DOC_VERSION}/protoc-gen-doc_${PROTOC_GEN_DOC_VERSION}_linux_amd64.tar.gz | tar xvz -C /tmp && mv /tmp/protoc-gen-doc /usr/bin
 
-# download any.proto
-RUN curl -L -o /ext_protos/google/protobuf/any.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v${PROTOBUF_VERSION}/src/google/protobuf/any.proto
-
-# download descriptor.proto
-RUN curl -L -o /ext_protos/google/protobuf/descriptor.proto https://raw.githubusercontent.com/protocolbuffers/protobuf/v${PROTOBUF_VERSION}/src/google/protobuf/descriptor.proto
 
 WORKDIR /in
