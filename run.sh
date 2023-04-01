@@ -6,10 +6,16 @@ set -o pipefail
 IMAGE_NAME=ghcr.io/srl-labs/protoc
 IMAGE_TAG=22.1__1.28.1
 
-function build() {
+function build {
     echo "Building..."
     docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
     docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+}
+
+function push {
+    echo "Pushing..."
+    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+    docker push ${IMAGE_NAME}:latest
 }
 
 function help {

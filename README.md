@@ -8,9 +8,7 @@ The container image contains the following software components:
 * [protoc-gen-go](https://github.com/protocolbuffers/protobuf-go)
 * [protoc-gen-go-grpc](https://github.com/protocolbuffers/protobuf-go)
 * [grpcio-tools](https://pypi.org/project/grpcio-tools/)
-* additional proto files that are commonly imported by other proto files:
-  * [`any.proto`](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/any.proto)
-  * [`descriptor.proto`](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/descriptor.proto)
+* [protoc-gen-doc](https://github.com/pseudomuto/protoc-gen-doc)
 
 ## Versioning
 
@@ -28,19 +26,17 @@ A version of the gRPC plugins for Go and Python are not included in the tag, and
 | Repo tag        | `protoc-gen-go-grpc` | `grpcio-tools` |
 | --------------- | -------------------- | -------------- |
 | `21.12__1.28.1` | `1.2.0`              | `1.51.1`       |
+| `22.1__1.28.1`  | `1.2.0`              | `1.51.1`       |
 
 ## Build
 
 ```bash
-IMAGE_TAG=21.12__1.28.1
-docker build -t ghcr.io/srl-labs/protoc:${IMAGE_TAG} .
-docker tag ghcr.io/srl-labs/protoc:${IMAGE_TAG} ghcr.io/srl-labs/protoc:latest
+./run.sh build
 ```
 
 ```bash
 # push images
-docker push ghcr.io/srl-labs/protoc:${IMAGE_TAG}
-docker push ghcr.io/srl-labs/protoc:latest
+./run.sh push
 ```
 
 ## Usage
@@ -48,13 +44,15 @@ docker push ghcr.io/srl-labs/protoc:latest
 ### Go
 
 ```bash
-docker run -v $(pwd)/proto:/in -v $(pwd)/ndk:/out ghcr.io/srl-labs/protoc \
-  bash -c "protoc --go_out=paths=source_relative:/out --go-grpc_out=paths=source_relative:/out *.proto"
+docker run -v $(pwd):/in \
+  -v $(pwd)/proto:/in/github.com/openconfig/gnmi/proto \
+  ghcr.io/srl-labs/protoc:${IMAGE_TAG} ash -c "protoc -I .:/protobuf/include --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative,require_unimplemented_servers=false proto/gnmi/gnmi.proto"
 ```
 
 ### Python
 
 ```bash
-docker run -v $(pwd)/proto:/in -v $(pwd)/ndk:/out ghcr.io/srl-labs/protoc \
-  bash -c "python3 -m grpc_tools.protoc -I /in --python_out=/out --grpc_python_out=/out *.proto"
+docker run -v $(pwd):/in \
+  -v $(pwd)/proto:/in/github.com/openconfig/gnmi/proto \
+  ghcr.io/srl-labs/protoc:${IMAGE_TAG} ash -c "python3 -m grpc_tools.protoc -I ".:/protobuf/include" --python_out=. --grpc_python_out=. proto/gnmi/gnmi.proto"
 ```
