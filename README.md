@@ -9,6 +9,7 @@ The container image contains the following software components:
 * [protoc-gen-go-grpc](https://github.com/protocolbuffers/protobuf-go)
 * [grpcio-tools](https://pypi.org/project/grpcio-tools/)
 * [protoc-gen-doc](https://github.com/pseudomuto/protoc-gen-doc)
+* [googleapis](https://github.com/googleapis/googleapis)
 
 ## Versioning
 
