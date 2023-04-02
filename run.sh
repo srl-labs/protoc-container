@@ -18,6 +18,10 @@ function push {
     docker push ${IMAGE_NAME}:latest
 }
 
+function enter-container {
+    docker run --rm -it ${IMAGE_NAME}:${IMAGE_TAG} ash
+}
+
 function help {
   printf "%s <task> [args]\n\nTasks:\n" "${0}"
 
