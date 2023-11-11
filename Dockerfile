@@ -11,11 +11,11 @@ FROM python:3-alpine
 RUN apk add curl unzip
 
 # protobuf (protoc) releases - https://github.com/protocolbuffers/protobuf/releases
-ARG PROTOBUF_VERSION=23.3
+ARG PROTOBUF_VERSION=24.4
 # protoc-gen-go releases - https://github.com/protocolbuffers/protobuf-go/releases
 ARG PROTOC_GEN_GO_VERSION=1.31.0
 # grpcio-tools releases - https://pypi.org/project/grpcio-tools/#history
-ARG PYTHON_GRPCIO_TOOLS_VERSION=1.56.0
+ARG PYTHON_GRPCIO_TOOLS_VERSION=1.59.2
 # protoc-gen-doc releases - https://github.com/pseudomuto/protoc-gen-doc/releases
 ARG PROTOC_GEN_DOC_VERSION=1.5.1
 # googleapis commit - https://github.com/googleapis/googleapis
