@@ -4,7 +4,12 @@ set -o errexit
 set -o pipefail
 
 IMAGE_NAME=ghcr.io/srl-labs/protoc
-IMAGE_TAG=22.1__1.28.1
+IMAGE_TAG=$2
+
+if [ -z "$2" ]; then
+    echo "Usage: $0 <build or push> <image_tag>"
+    exit 1
+fi
 
 function build {
     echo "Building..."
