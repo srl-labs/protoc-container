@@ -31,7 +31,7 @@ RUN curl -NL -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/rele
 # protoc-gen-go installation
 RUN curl -NL https://github.com/protocolbuffers/protobuf-go/releases/download/v${PROTOC_GEN_GO_VERSION}/protoc-gen-go.v${PROTOC_GEN_GO_VERSION}.linux.amd64.tar.gz | tar xvz -C /protobuf
 
-RUN install /protobuf/bin/protoc /usr/bin
+RUN install /protobuf/bin/protoc /protobuf/protoc-gen-go /usr/bin
 
 # copy protoc-gen-go-grpc
 COPY --from=go-grpc-builder /out/ /usr/bin/
