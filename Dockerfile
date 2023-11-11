@@ -1,5 +1,6 @@
-FROM golang:1.18-alpine as go-grpc-builder
-ARG PROTOC_GEN_GO_GRPC_VERSION=1.2.0
+FROM golang:1.21-alpine as go-grpc-builder
+# available versions - https://pkg.go.dev/google.golang.org/grpc/cmd/protoc-gen-go-grpc?tab=versions
+ARG PROTOC_GEN_GO_GRPC_VERSION=1.3.0
 ENV GOBIN=/out
 
 RUN mkdir /out
@@ -9,13 +10,16 @@ RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v${PROTOC_GEN_GO_GR
 FROM python:3-alpine
 RUN apk add curl unzip
 
-# protobuf releases - https://github.com/protocolbuffers/protobuf/releases
-ARG PROTOBUF_VERSION=22.1
-ARG PROTOC_GEN_GO_VERSION=1.28.1
-ARG PYTHON_GRPCIO_TOOLS_VERSION=1.51.1
+# protobuf (protoc) releases - https://github.com/protocolbuffers/protobuf/releases
+ARG PROTOBUF_VERSION=24.4
+# protoc-gen-go releases - https://github.com/protocolbuffers/protobuf-go/releases
+ARG PROTOC_GEN_GO_VERSION=1.31.0
+# grpcio-tools releases - https://pypi.org/project/grpcio-tools/#history
+ARG PYTHON_GRPCIO_TOOLS_VERSION=1.59.2
+# protoc-gen-doc releases - https://github.com/pseudomuto/protoc-gen-doc/releases
 ARG PROTOC_GEN_DOC_VERSION=1.5.1
-ARG PROTOBUF_DEV_VERSION=3.21.9-r0
-ARG GOOGLE_APIS_VERSION=4c3b682f501bb965d34c3d4fc3461edfccf962db
+# googleapis commit - https://github.com/googleapis/googleapis
+ARG GOOGLE_APIS_VERSION=5f2465117c6ec4bd8d7b5d23fc8e436608156e64
 
 ENV OUTDIR=/out
 
@@ -27,10 +31,7 @@ RUN curl -NL -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/rele
 # protoc-gen-go installation
 RUN curl -NL https://github.com/protocolbuffers/protobuf-go/releases/download/v${PROTOC_GEN_GO_VERSION}/protoc-gen-go.v${PROTOC_GEN_GO_VERSION}.linux.amd64.tar.gz | tar xvz -C /protobuf
 
-# protoc-gen-go-grpc installation
-RUN curl -NL https://github.com/protocolbuffers/protobuf-go/releases/download/v${PROTOC_GEN_GO_VERSION}/protoc-gen-go.v${PROTOC_GEN_GO_VERSION}.linux.amd64.tar.gz | tar xvz -C /protobuf
-
-RUN install /protobuf/bin/protoc /protobuf/protoc-gen-go /usr/bin
+RUN install /protobuf/bin/protoc /usr/bin
 
 # copy protoc-gen-go-grpc
 COPY --from=go-grpc-builder /out/ /usr/bin/

@@ -13,7 +13,7 @@ The container image contains the following software components:
 
 ## Versioning
 
-This repo and the container image are tagged with the following versioning scheme:
+This repo and the container image are [tagged](https://github.com/srl-labs/protoc-container/pkgs/container/protoc) with the following versioning scheme:
 
 ```bash
 # e.g. 21.12__1.28.1
@@ -28,6 +28,7 @@ A version of the gRPC plugins for Go and Python are not included in the tag, and
 | --------------- | -------------------- | -------------- |
 | `21.12__1.28.1` | `1.2.0`              | `1.51.1`       |
 | `22.1__1.28.1`  | `1.2.0`              | `1.51.1`       |
+| `24.4__1.31.0`  | `1.3.0`              | `1.59.2`       |
 
 ## Build
 
